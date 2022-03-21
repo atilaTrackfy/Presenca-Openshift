@@ -4,6 +4,7 @@ import pandas as pd
 from fortPosition import presencemod
 from sklearn import preprocessing
 import time
+import numpy as np
 
 def connectDatabase():
     try:
@@ -45,13 +46,8 @@ def grabRawData(conn, lastTS):
     table = pd.read_sql_query(query, conn)
     return table
 
-def grabScannerList(cursor, lastTS):
-    query = f"select distinct scanner from scan where ts > {lastTS} order by scanner,ts LIMIT 10000"
-    cursor.execute(query)
-    scanners = cursor.fetchall()
-    scannerList = []
-    for row in scanners:
-        scannerList.append(row[0])
+def grabScannerList(table):
+    scannerList = np.unique(table.scanner.values)
     return scannerList
 
 def calculatePresence():
