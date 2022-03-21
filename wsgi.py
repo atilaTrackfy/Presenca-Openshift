@@ -33,7 +33,7 @@ def createTable(cursor):
             CONSTRAINT local_pkey PRIMARY KEY (ID));
     """)
 
-def checkLastTimeStamp (values,cursor):
+def checkLastTimeStamp (cursor):
     cursor.execute("select ts from local order by ts desc limit 1")
     return cursor.fetchone()[0]
 
