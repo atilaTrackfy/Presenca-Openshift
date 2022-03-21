@@ -35,7 +35,7 @@ def createTable(cursor):
 
 def checkLastTimeStamp (cursor):
     cursor.execute("select ts from local order by ts desc limit 1")
-    if cursor.rowcount > 0::
+    if cursor.rowcount > 0:
         return cursor.fetchone()[0]
     else:
         return 0
