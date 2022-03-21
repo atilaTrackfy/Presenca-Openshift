@@ -1,12 +1,7 @@
-FROM ubuntu:22.04
+FROM ubuntu:20.04
 
-ENV TZ=America/Bahia
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
-RUN apt-get install -y \
-    gnupg
-
-RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 871920D1991BC93C
+#ENV TZ=America/Bahia
+#RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update && apt-get install -y \
     python3.9 \
