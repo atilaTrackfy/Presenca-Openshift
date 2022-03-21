@@ -81,7 +81,7 @@ def calculatePresence():
             tableProcData             = tableRawData[ ['ts', 'beacon'] ]
             tableProcData['location'] = location
 
-            tableProcData.to_sql("local", conn, index=False, if_exists='append', chucksize=1000)
+            tableProcData.to_sql("local", conn, index=False, if_exists='append', chunksize=1000)
 
         return isThereData
     return conn
