@@ -47,7 +47,7 @@ def grabRawData(conn, lastTS):
     return table
 
 def grabScannerList(table):
-    scannerList = np.unique(table.scanner.values)
+    scannerList = list(set(table.scanner.values))
     return scannerList
 
 def calculatePresence():
