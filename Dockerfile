@@ -2,6 +2,9 @@ FROM ubuntu:20.04
 
 #ENV TZ=America/Bahia
 #RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN apt-get install -y gnupg1
+
 RUN gpg --recv-keys AA8E81B4331F7F50 \
     && gpg --export AA8E81B4331F7F50| apt-key add -
 
