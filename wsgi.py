@@ -46,7 +46,7 @@ def grabRawData(conn, lastTS):
     return table
 
 def grabScannerList(cursor, lastTS):
-    query = f"select distinct scanner from scan where ts > {lastTS} order by ts LIMIT 10000"
+    query = f"select distinct scanner from scan where ts > {lastTS} order by scanner,ts LIMIT 10000"
     cursor.execute(query)
     scanners = cursor.fetchall()
     scannerList = []
