@@ -30,7 +30,7 @@ def createTable(cursor):
             LOCAL           CHAR(17)    NOT NULL,
             BEACON          CHAR(17)    NOT NULL,
             TS              BIGINT      NOT NULL,
-            CONSTRAINT scan_pkey PRIMARY KEY (ID));
+            CONSTRAINT local_pkey PRIMARY KEY (ID));
     """)
 
 def checkLastTimeStamp (values,cursor):
