@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM jefferyb/openshift-ubuntu
 
 #ENV TZ=America/Bahia
 #RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
