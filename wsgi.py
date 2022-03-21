@@ -64,7 +64,7 @@ def calculatePresence():
             le           = preprocessing.LabelEncoder()
             le.fit(scannerList)
             scannerListLabel = le.transform(scannerList)
-            scannerLabel     = le.transform(table["scanner"])
+            scannerLabel     = le.transform(tableRawData["scanner"])
 
             location = le.inverse_transform(
                          presencemod.presence(
