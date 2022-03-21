@@ -35,9 +35,9 @@ def createTable(cursor):
 
 def checkLastTimeStamp (cursor):
     cursor.execute("select ts from local order by ts desc limit 1")
-    if cursor.fetchone()[0]:
+    try cursor.fetchone()[0]:
         return cursor.fetchone()[0]
-    else:
+    except TypeError:
         return 0
 
 def grabRawData(conn, lastTS):
