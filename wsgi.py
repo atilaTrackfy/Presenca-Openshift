@@ -35,7 +35,10 @@ def createTable(cursor):
 
 def checkLastTimeStamp (cursor):
     cursor.execute("select ts from local order by ts desc limit 1")
-    return cursor.fetchone()[0]
+    if cursor.fetchone()[0]:
+        return cursor.fetchone()[0]
+    else:
+        return 0
 
 def grabRawData(conn, lastTS):
     query = f"select * from scan where ts > {lastTS} order by ts LIMIT 10000"
