@@ -59,7 +59,7 @@ def calculatePresence():
         tableRawData = grabRawData(conn, lastTS)
         isThereData  = not tableRawData.empty
         if isThereData:
-            scannerList  = grabScannerList(cursor, lastTS)
+            scannerList  = grabScannerList(tableRawData)
             scannerList  = [ "???" ] + scannerList
             le           = preprocessing.LabelEncoder()
             le.fit(scannerList)
