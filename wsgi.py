@@ -10,8 +10,7 @@ from sqlalchemy import create_engine
 
 def connectDatabase():
     try:
-        #conn = psycopg2.connect("host=172.30.227.104 port=5432 dbname=sampledb user=trackfy password=Rq4KwKctSCKePJyJ")
-        conn = sqlalchemy.create_engine("postgresql://trackfy:Rq4KwKctSCKePJyJ@172.30.227.104:5432/sampledb")
+        conn = psycopg2.connect("host=172.30.227.104 port=5432 dbname=sampledb user=trackfy password=Rq4KwKctSCKePJyJ")
         #engine = sqlalchemy.create_engine('postgresql://postgres:test1234@localhost:5432/sql-shack-demo')
         # conn = psycopg2.connect("host=localhost port=5432 dbname=experiment user=postgres password=postgres")
         print("Connected!")
@@ -27,6 +26,10 @@ def connectDatabase():
     # else:
         # print('Connection not established to PostgreSQL.')
         # return False
+
+def createDatabaseEngine():
+    eng = sqlalchemy.create_engine("postgresql://trackfy:Rq4KwKctSCKePJyJ@172.30.227.104:5432/sampledb")
+    return eng
 
 
 def createTable(cursor):
@@ -56,11 +59,12 @@ def grabScannerList(table):
 
 def calculatePresence():
     conn   = connectDatabase()
+    eng    = createDatabaseEngine()
     if conn:
         cursor = conn.cursor()
         createTable(cursor)
         lastTS       = checkLastTimeStamp(cursor)
-        tableRawData = grabRawData(conn, lastTS)
+        tableRawData = grabRawData(eng, lastTS)
         isThereData  = not tableRawData.empty
         if isThereData:
             scannerList  = grabScannerList(tableRawData)
@@ -85,7 +89,7 @@ def calculatePresence():
             tableProcData             = tableRawData[ ['ts', 'beacon'] ]
             tableProcData['location'] = location
 
-            tableProcData.to_sql("local", conn, index=False, if_exists='append', chunksize=1000)
+            tableProcData.to_sql("local", eng, index=False, if_exists='append', chunksize=1000)
 
         return isThereData
     return conn
