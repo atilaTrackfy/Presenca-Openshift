@@ -85,8 +85,7 @@ def calculatePresence():
                              )
                          )
             print(location)
-            print("-------------------------------------------------------------")
-            print(tableRawData)
+            #print(tableRawData)
             #tableProcData             = tableRawData[ ['ts', 'beacon'] ]
             #tableProcData.loc['local'] = location
 
