@@ -87,7 +87,15 @@ def calculatePresence():
 
             tableProcData             = tableRawData[ ['ts', 'beacon'] ]
             tableProcData.loc['scanner'] = location
-
+            print(presencemod.presence(
+                             n=len(tableRawData.ts.values),
+                             windowtimelength=30000,
+                             ts=tableRawData.ts.values,
+                             rssi=tableRawData.rssi.values,
+                             scanner=scannerLabel,
+                             numscanners=len(scannerListLabel),
+                             scannerlist=scannerListLabel
+                             ))
 
         return isThereData
     return conn
@@ -95,7 +103,10 @@ def calculatePresence():
 if __name__ == "__main__":
 
     print("Starting Application")
-    while True:
+    #while True:
+    x = 0
+    while x < 10 
         isThereData = calculatePresence()
         if not isThereData:
             time.sleep(120)
+        x = x + 1
