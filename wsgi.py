@@ -85,8 +85,8 @@ def calculatePresence():
                              )
                          )
 
-            tableProcData             = tableRawData[ ['ts', 'beacon'] ]
-            tableProcData.loc['scanner'] = location
+            #tableProcData             = tableRawData[ ['ts', 'beacon'] ]
+            #tableProcData.loc['scanner'] = location
             print(presencemod.presence(
                              n=len(tableRawData.ts.values),
                              windowtimelength=30000,
