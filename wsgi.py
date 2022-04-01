@@ -31,7 +31,6 @@ def createDatabaseEngine():
     eng = sqlalchemy.create_engine("postgresql://trackfy:Rq4KwKctSCKePJyJ@172.30.227.104:5432/sampledb")
     return eng
 
-
 def createTable(cursor):
     cursor.execute("""CREATE TABLE IF NOT EXISTS LOCAL
             (ID             SERIAL,
@@ -87,7 +86,7 @@ def calculatePresence():
                          )
 
             tableProcData             = tableRawData[ ['ts', 'beacon'] ]
-            tableProcData.loc['location'] = location
+            tableProcData.loc['local'] = location
 
             tableProcData.to_sql("local", eng, index=False, if_exists='append', chunksize=1000)
 
