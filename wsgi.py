@@ -105,7 +105,7 @@ if __name__ == "__main__":
     print("Starting Application")
     #while True:
     x = 0
-    while x < 10 
+    while x < 10: 
         isThereData = calculatePresence()
         if not isThereData:
             time.sleep(120)
