@@ -4,6 +4,7 @@ import pandas as pd
 from fortPosition import presencemod
 from sklearn import preprocessing
 import time
+import numpy as np
 
 def connectDatabase():
     try:
@@ -32,25 +33,23 @@ def createTable(cursor):
             LOCAL           CHAR(17)    NOT NULL,
             BEACON          CHAR(17)    NOT NULL,
             TS              BIGINT      NOT NULL,
-            CONSTRAINT scan_pkey PRIMARY KEY (ID));
+            CONSTRAINT local_pkey PRIMARY KEY (ID));
     """)
 
-def checkLastTimeStamp (values,cursor):
+def checkLastTimeStamp (cursor):
     cursor.execute("select ts from local order by ts desc limit 1")
-    return cursor.fetchone()[0]
+    if cursor.rowcount > 0:
+        return cursor.fetchone()[0]
+    else:
+        return 0
 
 def grabRawData(conn, lastTS):
     query = f"select * from scan where ts > {lastTS} order by ts LIMIT 10000"
     table = pd.read_sql_query(query, conn)
     return table
 
-def grabScannerList(cursor, lastTS):
-    query = f"select distinct scanner from scan where ts > {lastTS} order by ts LIMIT 10000"
-    cursor.execute(query)
-    scanners = cursor.fetchall()
-    scannerList = []
-    for row in scanners:
-        scannerList.append(row[0])
+def grabScannerList(table):
+    scannerList = list(set(table.scanner.values))
     return scannerList
 
 def calculatePresence():
@@ -62,12 +61,12 @@ def calculatePresence():
         tableRawData = grabRawData(conn, lastTS)
         isThereData  = not tableRawData.empty
         if isThereData:
-            scannerList  = grabScannerList(cursor, lastTS)
+            scannerList  = grabScannerList(tableRawData)
             scannerList  = [ "???" ] + scannerList
             le           = preprocessing.LabelEncoder()
             le.fit(scannerList)
             scannerListLabel = le.transform(scannerList)
-            scannerLabel     = le.transform(table["scanner"])
+            scannerLabel     = le.transform(tableRawData.scanner.values)
 
             location = le.inverse_transform(
                          presencemod.presence(
@@ -84,7 +83,7 @@ def calculatePresence():
             tableProcData             = tableRawData[ ['ts', 'beacon'] ]
             tableProcData['location'] = location
 
-            tableProcData.to_sql(local, conn, index=False, if_exists='append', chucksize=1000)
+            tableProcData.to_sql("local", conn, index=False, if_exists='append', chunksize=1000)
 
         return isThereData
     return conn
