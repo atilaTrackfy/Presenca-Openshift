@@ -10,8 +10,8 @@ from sqlalchemy import create_engine
 
 def connectDatabase():
     try:
-        conn = psycopg2.connect("host=172.30.227.104 port=5432 dbname=sampledb user=trackfy password=Rq4KwKctSCKePJyJ")
-        myeng = sqlalchemy.create_engine("postgresql://trackfy:Rq4KwKctSCKePJyJ@172.30.227.104:5432/sampledb")
+        #conn = psycopg2.connect("host=172.30.227.104 port=5432 dbname=sampledb user=trackfy password=Rq4KwKctSCKePJyJ")
+        conn = sqlalchemy.create_engine("postgresql://trackfy:Rq4KwKctSCKePJyJ@172.30.227.104:5432/sampledb")
         #engine = sqlalchemy.create_engine('postgresql://postgres:test1234@localhost:5432/sql-shack-demo')
         # conn = psycopg2.connect("host=localhost port=5432 dbname=experiment user=postgres password=postgres")
         print("Connected!")
