@@ -84,10 +84,9 @@ def calculatePresence():
                              scannerlist=scannerListLabel
                              )
                          )
-            print(location)
-            #print(tableRawData)
-            #tableProcData             = tableRawData[ ['ts', 'beacon'] ]
-            #tableProcData.loc['local'] = location
+
+            tableProcData             = tableRawData[ ['ts', 'beacon'] ]
+            tableProcData.loc['scanner'] = location
 
 
         return isThereData
