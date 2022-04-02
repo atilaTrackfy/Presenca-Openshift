@@ -85,10 +85,10 @@ def calculatePresence():
                              )
                          )
 
+            locationDtFrame = pd.DataFrame({'location': location})
             tableProcData             = tableRawData[ ['ts', 'beacon'] ]
+            tableProcData.join(locationDtFrame)
             #tableProcData.loc['scanner'] = location
-            print(len(tableProcData))
-            print(len(location))
 
         return isThereData
     return conn
