@@ -6,7 +6,7 @@ from sklearn import preprocessing
 import time
 import numpy as np
 import sqlalchemy
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, MetaData, Table, Column, Integer, BigInteger, String
 
 def connectDatabase():
     try:
@@ -91,7 +91,7 @@ def calculatePresence():
             tableProcData             = tableRawData[ ['ts', 'beacon'] ]
             tableProcData.join(locationDtFrame)
             #tableProcData.loc['scanner'] = location
-            tableProcData.to_sql('local', conn, index=False, if_exists='append', chunksize=1000)
+            tableProcData.to_sql('local', eng, index=False, if_exists='append', chunksize=1000)
 
         return isThereData
     return conn
