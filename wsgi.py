@@ -85,11 +85,10 @@ def calculatePresence():
                              )
                          )
 
-            #tableProcData             = tableRawData[ ['ts', 'beacon'] ]
+            tableProcData             = tableRawData[ ['ts', 'beacon'] ]
             #tableProcData.loc['scanner'] = location
-
-            print(scannerLabel)
-
+            print(tableProcData)
+            
         return isThereData
     return conn
 
