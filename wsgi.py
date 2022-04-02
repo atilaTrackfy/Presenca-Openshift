@@ -89,9 +89,9 @@ def calculatePresence():
 
             locationDtFrame = pd.DataFrame({'local': location})
             tableProcData             = tableRawData[ ['ts', 'beacon'] ]
-            locationDtFrame.join(tableProcData)
+            joinedtFrame = locationDtFrame.join(tableProcData)
             #tableProcData.loc['scanner'] = location
-            print(locationDtFrame)
+            print(joinedtFrame)
             #locationDtFrame.to_sql('local', eng, index=False, if_exists='append', chunksize=1000)
 
         return isThereData
