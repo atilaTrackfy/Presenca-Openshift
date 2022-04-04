@@ -63,20 +63,9 @@ def checkLastTimeStamp (cursor, eng, localTable):
         lastTs = row[0]
     
     result.close()
-    print(row)
-    print(len(row))
     print(lastTs)
+    print(cursor.fetchone()[0])
     return lastTs
-
-    #if cursor.rowcount > 0:
-        #print(cursor.fetchone()[0])
-        #row = result.fetchone()
-        #print(row[0])
-        #return cursor.fetchone()[0]
-        #result.close()
-        #return row[0]
-    #else:
-       # return 0
 
 def grabRawData(conn, lastTS):
     query = f"select * from scan where ts > {lastTS} order by ts LIMIT 10000"
