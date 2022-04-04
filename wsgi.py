@@ -7,6 +7,7 @@ import time
 import numpy as np
 import sqlalchemy
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, BigInteger, String
+from sqlalchemy.sql import select
 
 def connectDatabase():
     try:
@@ -31,20 +32,34 @@ def createDatabaseEngine():
     eng = sqlalchemy.create_engine("postgresql://trackfy:Rq4KwKctSCKePJyJ@172.30.227.104:5432/sampledb")
     return eng
 
-def createTable(conn):
-    cursor = conn.cursor()
-    cursor.execute("""CREATE TABLE IF NOT EXISTS LOCAL
-            (ID             SERIAL,
-            LOCAL           CHAR(17)    NOT NULL,
-            BEACON          CHAR(17)    NOT NULL,
-            TS              BIGINT      NOT NULL,
-            CONSTRAINT local_pkey PRIMARY KEY (ID));
-    """)
-    conn.commit()
+def createTable(engine):
+    localTable = Table(
+        'local', meta, 
+        Column('id', Integer, primary_key = True), 
+        Column('local', String), 
+        Column('beacon', String),
+        Column('ts', BigInteger),
+    )
 
-def checkLastTimeStamp (cursor):
+	insp = sqlalchemy.inspect(engine)
+	if not insp.has_table("local", schema="public")):
+        meta = MetaData()
+        meta.create_all(engine)
+    else:
+        print("Tem tabela")
+
+    return localTable
+
+def checkLastTimeStamp (cursor, eng, localTable):
     cursor.execute("select ts from local order by ts desc limit 1")
+
+    slct = select(localTable.c.ts)
+    result = eng.execute(slct)
+    
     if cursor.rowcount > 0:
+        print(cursor.fetchone()[0])
+        row = result.fetchone()
+        print(row[0])
         return cursor.fetchone()[0]
     else:
         return 0
@@ -63,8 +78,8 @@ def calculatePresence():
     eng    = createDatabaseEngine()
     if conn:
         cursor = conn.cursor()
-        createTable(conn)
-        lastTS       = checkLastTimeStamp(cursor)
+        localTable = createTable(eng)
+        lastTS       = checkLastTimeStamp(cursor, localTable)
         tableRawData = grabRawData(eng, lastTS)
         isThereData  = not tableRawData.empty
         if isThereData:
@@ -100,9 +115,7 @@ if __name__ == "__main__":
 
     print("Starting Application")
     #while True:
-    x = 0
-    while x < 10: 
-        isThereData = calculatePresence()
-        if not isThereData:
-            time.sleep(120)
-        x = x + 1
+    isThereData = calculatePresence()
+        #if not isThereData:
+            #time.sleep(120)
+
