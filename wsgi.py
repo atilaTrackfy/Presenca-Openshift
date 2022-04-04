@@ -55,9 +55,7 @@ def checkLastTimeStamp (cursor, eng, localTable):
     cursor.execute("select ts from local order by ts desc limit 1")
     lastTs = 0
 
-    slct = select(localTable.c.ts)
-          .order_by(desc(localTable.c.ts))
-          .limit(1)
+    slct = select(localTable.c.ts).order_by(desc(localTable.c.ts)).limit(1)
 
     result = eng.execute(slct)
     row = result.fetchone()
