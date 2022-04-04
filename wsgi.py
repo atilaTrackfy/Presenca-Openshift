@@ -41,8 +41,8 @@ def createTable(engine):
         Column('ts', BigInteger),
     )
 
-	insp = sqlalchemy.inspect(engine)
-	if not insp.has_table("local", schema="public")):
+    insp = sqlalchemy.inspect(engine)
+    if not insp.has_table("local", schema="public")):
         meta = MetaData()
         meta.create_all(engine)
     else:
@@ -53,13 +53,13 @@ def createTable(engine):
 def checkLastTimeStamp (cursor, eng, localTable):
     cursor.execute("select ts from local order by ts desc limit 1")
 
-    slct = select(localTable.c.ts)
-    result = eng.execute(slct)
+    #slct = select(localTable.c.ts)
+    #result = eng.execute(slct)
     
     if cursor.rowcount > 0:
         print(cursor.fetchone()[0])
-        row = result.fetchone()
-        print(row[0])
+        #row = result.fetchone()
+        #print(row[0])
         return cursor.fetchone()[0]
     else:
         return 0
@@ -79,7 +79,7 @@ def calculatePresence():
     if conn:
         cursor = conn.cursor()
         localTable = createTable(eng)
-        lastTS       = checkLastTimeStamp(cursor, localTable)
+        lastTS       = checkLastTimeStamp(cursor, eng, localTable)
         tableRawData = grabRawData(eng, lastTS)
         isThereData  = not tableRawData.empty
         if isThereData:
