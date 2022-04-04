@@ -27,8 +27,6 @@ def createTable(engine):
     
     if not insp.has_table("local", schema="public"):
         meta.create_all(engine)
-    else:
-        print("Tem tabela")
 
     return localTable
 
@@ -38,7 +36,7 @@ def checkLastTimeStamp (eng, localTable):
     result = eng.execute(slct)
     row = result.fetchone()
 
-    if len(row) > 0:
+    if row is not None:
         lastTs = row[0]
     
     result.close()
