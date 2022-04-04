@@ -6,7 +6,7 @@ from sklearn import preprocessing
 import time
 import numpy as np
 import sqlalchemy
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, BigInteger, String
+from sqlalchemy import create_engine, MetaData, Table, Column, Integer, BigInteger, String, desc
 from sqlalchemy.sql import select
 
 def connectDatabase():
@@ -53,17 +53,32 @@ def createTable(engine):
 
 def checkLastTimeStamp (cursor, eng, localTable):
     cursor.execute("select ts from local order by ts desc limit 1")
+    lastTs = 0
 
     slct = select(localTable.c.ts)
+          .order_by(desc(localTable.c.ts))
+          .limit(1)
+
     result = eng.execute(slct)
+    row = result.fetchone()
+    if len(row):
+        lastTs = row[0]
     
-    if cursor.rowcount > 0:
-        print(cursor.fetchone()[0])
-        row = result.fetchone()
-        print(row[0])
-        return cursor.fetchone()[0]
-    else:
-        return 0
+    result.close()
+    print(row)
+    print(len(row))
+    print(lastTs)
+    return lastTs
+
+    #if cursor.rowcount > 0:
+        #print(cursor.fetchone()[0])
+        #row = result.fetchone()
+        #print(row[0])
+        #return cursor.fetchone()[0]
+        #result.close()
+        #return row[0]
+    #else:
+       # return 0
 
 def grabRawData(conn, lastTS):
     query = f"select * from scan where ts > {lastTS} order by ts LIMIT 10000"
