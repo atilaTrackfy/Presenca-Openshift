@@ -9,25 +9,6 @@ import sqlalchemy
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, BigInteger, String, desc
 from sqlalchemy.sql import select
 
-def connectDatabase():
-    try:
-        conn = psycopg2.connect("host=172.30.227.104 port=5432 dbname=sampledb user=trackfy password=Rq4KwKctSCKePJyJ")
-        #engine = sqlalchemy.create_engine('postgresql://postgres:test1234@localhost:5432/sql-shack-demo')
-        # conn = psycopg2.connect("host=localhost port=5432 dbname=experiment user=postgres password=postgres")
-        print("Connected!")
-        return conn
-    except psycopg2.OperationalError:
-        print('Connection not established to PostgreSQL.')
-        return False
-
-    # print("Connected!")
-    # if conn is not None:
-        # print('Connection established to PostgreSQL.')
-        # return conn
-    # else:
-        # print('Connection not established to PostgreSQL.')
-        # return False
-
 def createDatabaseEngine():
     eng = sqlalchemy.create_engine("postgresql://trackfy:Rq4KwKctSCKePJyJ@172.30.227.104:5432/sampledb")
     return eng
@@ -51,20 +32,16 @@ def createTable(engine):
 
     return localTable
 
-def checkLastTimeStamp (cursor, eng, localTable):
-    cursor.execute("select ts from local order by ts desc limit 1")
+def checkLastTimeStamp (eng, localTable):
     lastTs = 0
-
     slct = select(localTable.c.ts).order_by(desc(localTable.c.ts)).limit(1)
-
     result = eng.execute(slct)
     row = result.fetchone()
-    if len(row):
+
+    if len(row) > 0:
         lastTs = row[0]
     
     result.close()
-    print(lastTs)
-    print(cursor.fetchone()[0])
     return lastTs
 
 def grabRawData(conn, lastTS):
@@ -77,12 +54,10 @@ def grabScannerList(table):
     return scannerList
 
 def calculatePresence():
-    conn   = connectDatabase()
     eng    = createDatabaseEngine()
-    if conn:
-        cursor = conn.cursor()
-        localTable = createTable(eng)
-        lastTS       = checkLastTimeStamp(cursor, eng, localTable)
+    if eng:
+        localTable   = createTable(eng)
+        lastTS       = checkLastTimeStamp(eng, localTable)
         tableRawData = grabRawData(eng, lastTS)
         isThereData  = not tableRawData.empty
         if isThereData:
@@ -108,7 +83,6 @@ def calculatePresence():
             locationDtFrame = pd.DataFrame({'local': location})
             tableProcData             = tableRawData[ ['ts', 'beacon'] ]
             joinedtFrame = locationDtFrame.join(tableProcData)
-            #tableProcData.loc['scanner'] = location
             joinedtFrame.to_sql('local', eng, index=False, if_exists='append', chunksize=1000)
 
         return isThereData
