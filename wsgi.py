@@ -33,6 +33,7 @@ def createDatabaseEngine():
     return eng
 
 def createTable(engine):
+    meta = MetaData()
     localTable = Table(
         'local', meta, 
         Column('id', Integer, primary_key = True), 
@@ -42,8 +43,8 @@ def createTable(engine):
     )
 
     insp = sqlalchemy.inspect(engine)
+    
     if not insp.has_table("local", schema="public"):
-        meta = MetaData()
         meta.create_all(engine)
     else:
         print("Tem tabela")
