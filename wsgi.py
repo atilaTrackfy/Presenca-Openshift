@@ -42,7 +42,7 @@ def createTable(engine):
     )
 
     insp = sqlalchemy.inspect(engine)
-    if not insp.has_table("local", schema="public")):
+    if not insp.has_table("local", schema="public"):
         meta = MetaData()
         meta.create_all(engine)
     else:
@@ -53,13 +53,13 @@ def createTable(engine):
 def checkLastTimeStamp (cursor, eng, localTable):
     cursor.execute("select ts from local order by ts desc limit 1")
 
-    #slct = select(localTable.c.ts)
-    #result = eng.execute(slct)
+    slct = select(localTable.c.ts)
+    result = eng.execute(slct)
     
     if cursor.rowcount > 0:
         print(cursor.fetchone()[0])
-        #row = result.fetchone()
-        #print(row[0])
+        row = result.fetchone()
+        print(row[0])
         return cursor.fetchone()[0]
     else:
         return 0
